@@ -8,6 +8,7 @@ import net.minestom.server.event.player.PlayerChatEvent;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.LightingChunk;
+import net.minestom.server.instance.block.Block;
 import net.minestom.server.world.DimensionType;
 
 public class Server {
@@ -17,8 +18,8 @@ public class Server {
         MojangAuth.init();
 
         Instance instance = MinecraftServer.getInstanceManager().createInstanceContainer(DimensionType.OVERWORLD);
-
         instance.setChunkSupplier(LightingChunk::new);
+        instance.setGenerator(unit -> unit.modifier().fillHeight(0, 40, Block.GRASS_BLOCK));
 
         var geh = MinecraftServer.getGlobalEventHandler();
         geh.addListener(AsyncPlayerConfigurationEvent.class, event -> {

@@ -37,6 +37,8 @@ public class Game {
         }
 
         this.instance = instance;
+
+        init();
     }
 
     public Game(short[] expected, short[] input) {
@@ -55,7 +57,6 @@ public class Game {
                 instance.setBlock(x, 42, z, blocks.get((x + z) % 2));
             }
         }
-
     }
 
     public void start(Player player) {
