@@ -4,11 +4,11 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
+import net.minestom.server.event.player.PlayerChatEvent;
 import net.minestom.server.extras.MojangAuth;
 import net.minestom.server.instance.Instance;
-import net.minestom.server.instance.block.Block;
-
-import java.util.List;
+import net.minestom.server.instance.LightingChunk;
+import net.minestom.server.world.DimensionType;
 
 public class Server {
 
@@ -16,20 +16,21 @@ public class Server {
         MinecraftServer server = MinecraftServer.init();
         MojangAuth.init();
 
-        Instance instance = MinecraftServer.getInstanceManager().createInstanceContainer();
-        // chess board platform 14 x 18
-        List<Block> blocks = List.of(Block.STRIPPED_SPRUCE_WOOD, Block.STRIPPED_OAK_WOOD);
-        for (int x = 0; x < 14; x++) {
-            for (int z = 0; z < 18; z++) {
-                instance.setBlock(x, 0, z, blocks.get((x + z) % 2));
-            }
-        }
+        Instance instance = MinecraftServer.getInstanceManager().createInstanceContainer(DimensionType.OVERWORLD);
+
+        instance.setChunkSupplier(LightingChunk::new);
 
         var geh = MinecraftServer.getGlobalEventHandler();
         geh.addListener(AsyncPlayerConfigurationEvent.class, event -> {
             final Player player = event.getPlayer();
             event.setSpawningInstance(instance);
-            player.setRespawnPoint(new Pos(0, 2, 0));
+            player.setRespawnPoint(new Pos(0, 44, 0));
+        });
+
+        geh.addListener(PlayerChatEvent.class, event -> {
+            if (event.getMessage().equalsIgnoreCase("start")) {
+                GameManager.createGame(event.getPlayer(), 0);
+            }
         });
 
         server.start("0.0.0.0", 25565);
