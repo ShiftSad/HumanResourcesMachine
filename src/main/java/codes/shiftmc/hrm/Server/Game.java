@@ -1,6 +1,7 @@
 package codes.shiftmc.hrm.Server;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
@@ -60,5 +61,6 @@ public class Game {
     }
 
     public void start(Player player) {
+        player.setInstance(instance, new Pos(0, 42, 0));
     }
 }
